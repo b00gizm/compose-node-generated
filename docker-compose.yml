@@ -1,0 +1,28 @@
+version: '2'
+services:
+  web:
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+    environment:
+      - DATABASE_HOST=${DATABASE_HOST}
+      - DATABASE_PORT=${DATABASE_PORT}
+      - DATABASE_USER=${DATABASE_USER}
+      - DATABASE_PASS=${DATABASE_PASS}
+      - DATABASE_NAME=${DATABASE_NAME}
+    command:
+      - /docker-wait
+      - db:${DATABASE_PORT}
+      - --timeout=60
+      - --
+      - npm
+      - run
+      - start-dev
+    volumes:
+      - .:/app
+  db:
+    extends:
+      file: database-service.yml
+      service: database
